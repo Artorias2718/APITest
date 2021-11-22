@@ -8,8 +8,8 @@ using RestSharp;
 using System;
 using System.IO;
 using System.Net;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
+using APITest.Utilities;
 
 namespace APITest
 {
@@ -19,7 +19,6 @@ namespace APITest
 
         private static int Main(string[] args)
         {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             try
             {
                 // Start!
@@ -34,7 +33,23 @@ namespace APITest
 
                 try
                 {
+                    var oResponse1 = APIManager.QueryRest("https://jsonplaceholder.typicode.com", "todos", Method.GET);
+                    var oResponse2 = APIManager.QueryGraphQL("https://graphqlzero.almansi.me/api", Utility.JsonSerializeObject(new
+                    {
+                        query = @"{
+                            user(id: 1){
+                                id
+                                name
+                            }
+                        }",
+                        variables = new
+                        {
+
+                        }
+                    }));
+                    Console.WriteLine(Utility.JsonSerializeObject(oResponse1.Content, true));
                     Console.WriteLine();
+                    Console.WriteLine(Utility.JsonSerializeObject(oResponse2.Content, true));
                 }
                 catch (Exception ex)
                 {
